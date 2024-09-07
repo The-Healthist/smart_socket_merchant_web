@@ -1,0 +1,39 @@
+.handle-box {
+	margin-bottom: 20px;
+}
+
+.handle-select {
+	width: 120px;
+}
+
+.handle-input {
+	width: 300px;
+}
+
+.table {
+	width: 100%;
+	font-size: 14px;
+}
+
+.red {
+	color: #F56C6C;
+}
+
+.mr10 {
+	margin-right: 10px;
+}
+
+.table-td-thumb {
+	display: block;
+	margin: auto;
+	width: 40px;
+	height: 40px;
+}
+
+.mt10 {
+	margin-top: 10px;
+}
+
+.mt20 {
+	margin-top: 20px;
+}
