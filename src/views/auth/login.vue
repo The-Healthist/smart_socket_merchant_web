@@ -1,24 +1,41 @@
 <template>
   <div class="login-wrap">
     <div class="ms-login">
-      <div class="ms-title">Origin赛事后台管理</div>
-      <el-form :model="formData" :rules="rules" ref="login" label-width="0px" class="ms-content">
-        <el-form-item prop="email">
-          <el-input v-model="formData.email" placeholder="E-mail">
+      <div class="ms-title">SmartSocket Merchant商城</div>
+      <el-form
+        :model="formData"
+        :rules="rules"
+        ref="login"
+        label-width="0px"
+        class="ms-content"
+      >
+        <el-form-item prop="mobile">
+          <el-input
+            v-model="formData.mobile"
+            placeholder="mobile"
+          >
             <template #prepend>
               <el-button :icon="User"></el-button>
             </template>
           </el-input>
         </el-form-item>
         <el-form-item prop="password">
-          <el-input type="password" placeholder="password" v-model="formData.password" @keyup.enter="submitForm(login)">
+          <el-input
+            type="password"
+            placeholder="password"
+            v-model="formData.password"
+            @keyup.enter="submitForm(login)"
+          >
             <template #prepend>
               <el-button :icon="Lock"></el-button>
             </template>
           </el-input>
         </el-form-item>
         <div class="login-btn">
-          <el-button type="primary" @click="submitForm(login)">登录</el-button>
+          <el-button
+            type="primary"
+            @click="submitForm(login)"
+          >登录</el-button>
         </div>
       </el-form>
     </div>
@@ -26,65 +43,55 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from 'vue';
-import { useRouter } from 'vue-router';
-import { ElMessage } from 'element-plus';
-import type { FormInstance, FormRules } from 'element-plus';
-import { Lock, User } from '@element-plus/icons-vue';
-import { adminLogin, adminProfile } from '../../api';
+import { ref, reactive } from "vue";
+import { useRouter } from "vue-router";
+import { ElMessage } from "element-plus";
+import type { FormInstance, FormRules } from "element-plus";
+import { Lock, User } from "@element-plus/icons-vue";
+// import { adminLogin, adminProfile } from "../../api";
+import { MerchantLogin } from "../../api/auth";
 
 interface LoginInfo {
-  email: string;
+  mobile: string;
   password: string;
 }
 
 const router = useRouter();
 const formData = reactive<LoginInfo>({
-  email: '',
-  password: ''
+  mobile: "qwer",
+  password: "test123",
 });
 
 const rules: FormRules = {
-  email: [
+  mobile: [
     {
       required: true,
-      message: '请输入邮箱',
-      trigger: 'blur'
-    }
+      message: "请输入手机号",
+      trigger: "blur",
+    },
   ],
-  password: [{ required: true, message: '请输入密码', trigger: 'blur' }]
+  password: [{ required: true, message: "请输入密码", trigger: "blur" }],
 };
 const login = ref<FormInstance>();
-const submitForm = (formEl: FormInstance | undefined) => {
+const submitForm = (formEl: FormInstance | undefined | any) => {
   if (!formEl) return;
   formEl.validate((valid: boolean) => {
     if (valid) {
-      adminLogin(formData)
+      MerchantLogin(formData)
         .then((res) => {
-          ElMessage.success('登录成功');
-          localStorage.setItem('token', 'Bearer ' + res.data.token);
-          adminProfile()
-            .then((res) => {
-              localStorage.setItem('nickname', res.data.data.nickname);
-              localStorage.setItem('email', res.data.data.email);
-              router.push('/');
-            })
-            .catch((err) => {
-              console.log(err);
-            });
-
-
+          ElMessage.success("登录成功");
+          localStorage.setItem("token", "Bearer " + res.data.token);
+          router.push("/dashboard");
         })
         .catch((err) => {
           ElMessage.error(err.message);
         });
     } else {
-      ElMessage.error('登录成功');
+      ElMessage.error("登录失败");
       return false;
     }
   });
 };
-
 </script>
 
 <style scoped>

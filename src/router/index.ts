@@ -1,6 +1,7 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router';
 import { usePermissStore } from '../store/permiss';
 import Home from '../views/index.vue';
+import DeviceTypeManagement from '@/views/device/DeviceTypeManagement.vue';
 
 const routes: RouteRecordRaw[] = [
     {
@@ -129,6 +130,16 @@ const routes: RouteRecordRaw[] = [
                 },
                 component: () => import('../views/sponsor/Sponsor.vue'),
             },
+            {
+                path: '/device_management',
+                name: 'DeviceManagement',
+                component: () => import('../views/device/DeviceManagement.vue'),
+            },
+            {
+                path: '/device_type_management',
+                name: 'DeviceTypeManagement',
+                component: () => import('../views/device/DeviceTypeManagement.vue'),
+            }
         ],
     },
     {
@@ -154,16 +165,18 @@ const router = createRouter({
     routes,
 });
 
-// router.beforeEach((to, from, next) => {
-//     document.title = `${to.meta.title} | Origin`
-//     let token = localStorage.getItem('token')
+router.beforeEach((to, from, next) => {
+    document.title = `${to.meta.title} | Origin`
+    let token = localStorage.getItem('token')
 
-//     if (!token && !['/login'].includes(to.path)) {
-//         console.log(to.path);
-//         next('/login');
-//     } else {
-//         next()
-//     }
-// });
+    if (!token && !['/login'].includes(to.path)) {
+        console.log(to.path);
+        next('/login');
+    } else {
+        next()
+    }
+});
 
 export default router;
+
+
