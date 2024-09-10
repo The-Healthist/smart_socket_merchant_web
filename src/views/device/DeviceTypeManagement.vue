@@ -63,7 +63,7 @@
           <!-- 可放大查看 -->
           <el-image
             :src="row.pictureUrl"
-            style="width: 100px; height: 100px"
+            style=" height: 100px"
             fit="contain"
             preview-src-list="[row.pictureUrl]"
           >
@@ -86,7 +86,7 @@
         <template #default="{ row }">
           <a
             v-if="row.manualUrl"
-            href="https://www.elegislation.gov.hk/hk/A7%21sc.assist.pdf"
+            :href="row.manualUrl"
             target="_blank"
           >查看手册</a>
         </template>
@@ -132,18 +132,45 @@
           <el-input v-model="currentDeviceType.description" />
         </el-form-item>
         <el-form-item label="手册链接">
-          <input
-            type="file"
-            @change="handleFileChange('manualUrl', $event)"
-          />
+          <div class="col_flex">
+            <el-button @click="manualUrlInput.click()">上传手册</el-button>
+            <img
+              ref="manualUrlImg"
+              class="mt10"
+              fit="contain"
+              :src="currentDeviceType.manualUrl"
+              style="max-height: 200px;max-width: 200px;"
+            />
+            <input
+              type="file"
+              ref="manualUrlInput"
+              @change="onManualUrlUpload"
+              hidden
+            >
+          </div>
+
         </el-form-item>
         <el-form-item label="图片链接">
-          <input
-            type="file"
-            @change="handleFileChange('pictureUrl', $event)"
-          />
+          <div class="col_flex">
+            <el-button @click="avatarPictureUrlInput.click()">上传头像</el-button>
+            <img
+              ref="avatarPictureUrlImg"
+              class="mt10"
+              fit="contain"
+              :src="currentDeviceType.pictureUrl"
+              style="max-height: 200px;max-width: 200px;"
+            />
+            <input
+              type="file"
+              ref="avatarPictureUrlInput"
+              @change="onAvatarUpload"
+              hidden
+            >
+          </div>
+
         </el-form-item>
       </el-form>
+
       <!-- 对话框底部按钮 -->
       <template #footer>
         <span class="dialog-footer">
@@ -167,6 +194,8 @@ import {
   deleteDeviceType,
 } from "@/api/deviceType";
 import { ElMessage } from "element-plus";
+import { getUploadPolicy } from "@/api/file";
+import axios from "axios";
 
 // 设备类型接口定义
 interface DeviceType {
@@ -187,6 +216,8 @@ const pageSize = ref(10); // 每页显示数量
 const total = ref(0); // 总记录数
 const dialogVisible = ref(false); // 对话框可见性
 const dialogTitle = ref(""); // 对话框标题
+
+// 当前设备类型
 const currentDeviceType = ref<DeviceType>({
   name: "",
   description: "",
@@ -259,8 +290,90 @@ const editDeviceType = (deviceType: DeviceType) => {
 const addDeviceTypeFunction = () => {
   addDeviceTypeData();
 };
+// pictureUrl
+const avatarPictureUrlInput = ref<any>(null);
+const avatarPictureUrlImg = ref<any>(null);
+const avatarPictureUrlFile = ref<any>(null);
+// manualUrl
+const manualUrlInput = ref<any>(null);
+const manualUrlImg = ref<any>(null);
+const manualUrlFile = ref<any>(null);
+
+// 打开文件夹
+const onManualUrlUpload = () => {
+  if (manualUrlInput.value == null || manualUrlInput.value.files.length === 0) {
+    return;
+  }
+  manualUrlFile.value = manualUrlInput.value.files[0];
+  const reader = new FileReader();
+  reader.readAsDataURL(manualUrlFile.value);
+  reader.onload = () => {
+    manualUrlImg.value.src = reader.result;
+  };
+};
+const onAvatarUpload = () => {
+  if (
+    avatarPictureUrlInput.value == null ||
+    avatarPictureUrlInput.value.files.length === 0
+  ) {
+    return;
+  }
+  avatarPictureUrlFile.value = avatarPictureUrlInput.value.files[0];
+
+  const reader = new FileReader();
+  reader.readAsDataURL(avatarPictureUrlFile.value);
+  console.log(avatarPictureUrlImg.value);
+  reader.onload = () => {
+    avatarPictureUrlImg.value.src = reader.result;
+  };
+};
 // 保存设备类型（新增或更新）
 const saveDeviceType = async () => {
+  if (manualUrlFile.value) {
+    await getUploadPolicy().then(async (res) => {
+      let policy = res.data.data;
+      const formData = new FormData();
+      formData.append("key", policy.dir + manualUrlFile.value.name);
+      formData.append("policy", policy.policy);
+      formData.append("OSSAccessKeyId", policy.accessid);
+      formData.append("success_action_status", "200");
+      formData.append("signature", policy.signature);
+      formData.append("file", manualUrlFile.value);
+      await axios.post(policy.host, formData).then((res) => {
+        if (res.status === 200) {
+          currentDeviceType.value.manualUrl =
+            policy.host + "/" + policy.dir + manualUrlFile.value.name;
+          console.log(
+            "currentDeviceType.value.manualUrl",
+            currentDeviceType.value.manualUrl
+          );
+        }
+      });
+    });
+    manualUrlFile.value = null;
+  }
+  if (avatarPictureUrlFile.value)
+    await getUploadPolicy().then(async (res) => {
+      let policy = res.data.data;
+      const formData = new FormData();
+      formData.append("key", policy.dir + avatarPictureUrlFile.value.name);
+      formData.append("policy", policy.policy);
+      formData.append("OSSAccessKeyId", policy.accessid);
+      formData.append("success_action_status", "200");
+      formData.append("signature", policy.signature);
+      formData.append("file", avatarPictureUrlFile.value);
+      await axios.post(policy.host, formData).then((res) => {
+        if (res.status === 200) {
+          currentDeviceType.value.pictureUrl =
+            policy.host + "/" + policy.dir + avatarPictureUrlFile.value.name;
+          console.log(
+            "currentDeviceType.value.pictureUrl",
+            currentDeviceType.value.pictureUrl
+          );
+        }
+      });
+    });
+  avatarPictureUrlFile.value = null;
   try {
     if (currentDeviceType.value.id) {
       await updateDeviceType(
@@ -297,16 +410,6 @@ const deleteDeviceTypeHandler = async (deviceType: DeviceType) => {
 onMounted(() => {
   fetchDeviceTypes();
 });
-
-// 文件处理和上传函数
-const handleFileChange = async (field: string, event: Event) => {
-  const files = (event.target as HTMLInputElement).files;
-  if (!files || files.length === 0) {
-    ElMessage.error("没有选择文件");
-    return;
-  }
-  const file = files[0];
-};
 </script>
 
 <style scoped>
@@ -328,5 +431,22 @@ const handleFileChange = async (field: string, event: Event) => {
 
 .add-device-type-button:hover {
   background-color: #242f42;
+}
+
+.mt10 {
+  margin-top: 10px;
+}
+
+.manual-img,
+.avatar-img {
+  width: 100%; /* 或其他适当的宽度 */
+  height: auto; /* 保持图片原始宽高比 */
+  display: block; /* 确保图片独占一行 */
+}
+
+.col_flex {
+  display: flex;
+  align-items: start;
+  flex-direction: column;
 }
 </style>

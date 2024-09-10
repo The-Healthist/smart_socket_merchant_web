@@ -94,30 +94,30 @@ const items = <any>[
     index: "/device_type_management",
     title: "设备类型管理",
   },
-  {
-    // Manuscript
-    icon: "Film",
-    index: "/manuscript",
-    title: "稿件管理",
-  },
-  {
-    // Participant
-    icon: "User",
-    index: "/participant",
-    title: "选手管理",
-  },
-  {
-    // Voting
-    icon: "Checked",
-    index: "/voting",
-    title: "投票管理",
-  },
-  {
-    // Voting
-    icon: "Failed",
-    index: "/blacklist",
-    title: "黑名单",
-  },
+  // {
+  //   // Manuscript
+  //   icon: 'Film',
+  //   index: '/manuscript',
+  //   title: '稿件管理',
+  // },
+  // {
+  //   // Participant
+  //   icon: 'User',
+  //   index: '/participant',
+  //   title: '选手管理',
+  // },
+  // {
+  //   // Voting
+  //   icon: 'Checked',
+  //   index: '/voting',
+  //   title: '投票管理',
+  // },
+  // {
+  //   // Voting
+  //   icon: 'Failed',
+  //   index: '/blacklist',
+  //   title: '黑名单',
+  // },
   {
     // Q&A
     icon: "QuestionFilled",
@@ -130,31 +130,31 @@ const items = <any>[
     index: "/account_admin",
     title: "管理员账户",
   },
-  {
-    icon: "UserFilled",
-    index: "/worldview",
-    title: "世界观",
-  },
-  {
-    icon: "UserFilled",
-    index: "/pv",
-    title: "PV",
-  },
-  {
-    icon: "UserFilled",
-    index: "/partner",
-    title: "合作伙伴",
-  },
-  {
-    icon: "UserFilled",
-    index: "/special_guest",
-    title: "特邀嘉宾",
-  },
-  {
-    icon: "UserFilled",
-    index: "/sponsor",
-    title: "主办方",
-  },
+  // {
+  //   icon: 'UserFilled',
+  //   index: '/worldview',
+  //   title: '世界观',
+  // },
+  // {
+  //   icon: 'UserFilled',
+  //   index: '/pv',
+  //   title: 'PV',
+  // },
+  // {
+  //   icon: 'UserFilled',
+  //   index: '/partner',
+  //   title: '合作伙伴',
+  // },
+  // {
+  //   icon: 'UserFilled',
+  //   index: '/special_guest',
+  //   title: '特邀嘉宾',
+  // },
+  // {
+  //   icon: 'UserFilled',
+  //   index: '/sponsor',
+  //   title: '主办方',
+  // },
 ];
 
 const route = useRoute();

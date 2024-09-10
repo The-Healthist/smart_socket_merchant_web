@@ -58,8 +58,8 @@ interface LoginInfo {
 
 const router = useRouter();
 const formData = reactive<LoginInfo>({
-  mobile: "qwer",
-  password: "test123",
+  mobile: "15666823185",
+  password: "123123",
 });
 
 const rules: FormRules = {
