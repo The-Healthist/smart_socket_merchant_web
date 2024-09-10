@@ -2,14 +2,14 @@ import request from "../utils/request";
 
 export const getDeviceTypes = () => {
   return request({
-    url: `/api/merchant/device-type`,
+    url: `/api/merchant/device_type`,
     method: "GET"
   })
 }
 
 export const addDeviceType = (data: any) => {
   return request({
-    url: `/api/merchant/device-type`,
+    url: `/api/merchant/device_type`,
     method: "POST",
     data
   })
@@ -17,15 +17,18 @@ export const addDeviceType = (data: any) => {
 
 export const updateDeviceType = (id: string, data: any) => {
   return request({
-    url: `/api/merchant/device-type/${id}`,
+    url: `/api/merchant/device_type/${id}`,
     method: "PUT",
     data
   })
 }
 
-export const deleteDeviceType = (id: string) => {
+export const deleteDeviceType = (ids: any) => {
   return request({
-    url: `/api/merchant/device-type/${id}`,
-    method: "DELETE"
+    url: `/api/merchant/device_type`,
+    method: "DELETE",
+    data: {
+      ids: ids
+    }
   })
 }

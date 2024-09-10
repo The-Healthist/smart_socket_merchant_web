@@ -32,9 +32,12 @@ export const updateDevice = (id: string, data: any) => {
   })
 }
 
-export const deleteDevice = (id: string) => {
+export const deleteDevice = (uuids: any) => {
   return request({
-    url: `/api/merchant/device/${id}`,
-    method: "DELETE"
+    url: `/api/merchant/device`,
+    method: "DELETE",
+    data: {
+      uuids: uuids
+    }
   })
 }
