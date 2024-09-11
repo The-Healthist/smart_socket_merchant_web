@@ -79,12 +79,6 @@ const items = <any>[
     permiss: "1",
   },
   {
-    // Manuscript
-    icon: "Film",
-    index: "/event",
-    title: "赛事管理",
-  },
-  {
     icon: "Odometer",
     index: "/device_management",
     title: "设备管理",
@@ -94,6 +88,25 @@ const items = <any>[
     index: "/device_type_management",
     title: "设备类型管理",
   },
+  {
+    // Voting
+    icon: "UserFilled",
+    index: "/account_admin",
+    title: "管理员账户",
+  },
+  // {
+  //   // Q&A
+  //   icon: "QuestionFilled",
+  //   index: "/qa",
+  //   title: "Q&A",
+  // },
+  // {
+  //   // Manuscript
+  //   icon: "Film",
+  //   index: "/event",
+  //   title: "赛事管理",
+  // },
+
   // {
   //   // Manuscript
   //   icon: 'Film',
@@ -118,18 +131,7 @@ const items = <any>[
   //   index: '/blacklist',
   //   title: '黑名单',
   // },
-  {
-    // Q&A
-    icon: "QuestionFilled",
-    index: "/qa",
-    title: "Q&A",
-  },
-  {
-    // Voting
-    icon: "UserFilled",
-    index: "/account_admin",
-    title: "管理员账户",
-  },
+
   // {
   //   icon: 'UserFilled',
   //   index: '/worldview',

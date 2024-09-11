@@ -36,6 +36,7 @@
     <el-table
       :data="deviceShowInTable"
       style="width: 100%"
+      @row-click="handleRowClick"
     >
       <!-- 表格列定义 -->
       <el-table-column
@@ -65,9 +66,9 @@
       <!-- 操作列 -->
       <el-table-column label="Actions">
         <template #default="{ row }">
-          <el-button @click="editDevice(row)">Edit</el-button>
+          <el-button @click.stop="editDevice(row)">Edit</el-button>
           <el-button
-            @click="deleteDeviceHandler(row)"
+            @click.stop="deleteDeviceHandler(row)"
             type="danger"
           >Delete</el-button>
         </template>
@@ -130,6 +131,98 @@
         </span>
       </template>
     </el-dialog>
+
+    <!-- 设备详情对话框 -->
+    <el-dialog
+      title="Device Details"
+      v-model="detailDialogVisible"
+      width="90%"
+    >
+      <el-row gutter={20}>
+        <!-- 基本信息 -->
+        <el-col :span="8">
+          <el-card
+            :title="'Basic Information'"
+            style="height: 400px;"
+          >
+            <div class="card-title">Basic Info</div> <!-- Added title -->
+            <div style="display: flex;flex-direction: column; flex-wrap: wrap;">
+              <div class="info-item"><strong>Name:</strong>
+                {{ deviceDetail.name }}</div>
+              <div class="info-item"><strong>Location:</strong>
+                {{ deviceDetail.location }}</div>
+              <div class="info-item"><strong>Remark:</strong>
+                {{ deviceDetail.remark }}</div>
+              <div class="info-item"><strong>Price Formula:</strong>
+                {{ deviceDetail.priceFormula }}</div>
+              <div class="info-item"><strong>Created At:</strong>
+                {{ formatDate(deviceDetail.createdAt) }}</div>
+              <div class="info-item"><strong>Updated At:</strong>
+                {{ formatDate(deviceDetail.updatedAt) }}</div>
+            </div>
+          </el-card>
+        </el-col>
+
+        <!-- 设备类型信息 -->
+        <el-col :span="8">
+          <el-card
+            :title="'Device Type Information'"
+            style="height: 400px;"
+          >
+            <div class="card-title">Device Type Info</div> <!-- Added title -->
+            <div
+              style="display: flex; flex-direction: column; flex-wrap: wrap;">
+              <div class="info-item"><strong>Type Name:</strong>
+                {{ deviceDetail.deviceType.name }}</div>
+              <div class="info-item"><strong>Description:</strong>
+                {{ deviceDetail.deviceType.description }}</div>
+              <div
+                class="info-item"
+                style="width: 200px;max-height: 100px; display: flex; flex-direction: row;"
+              ><strong>Manual URL:</strong><img
+                  :src="deviceDetail.deviceType.manualUrl"
+                  style="max-width: 100px; max-height: 100px;"
+                /></div>
+              <div
+                class="info-item"
+                style="width: 100px;"
+              ><strong>Picture URL:</strong>
+                <div
+                  class="info-item"
+                  style="width: 200px;max-height: 100px; display: flex; flex-direction: row;"
+                ><strong>Manual URL:</strong><img
+                    :src="deviceDetail.deviceType.manualUrl"
+                    style="max-width: 100px; max-height: 100px;"
+                  /></div>
+              </div>
+            </div>
+          </el-card>
+        </el-col>
+
+        <!-- 所有者信息 -->
+        <el-col :span="8">
+          <el-card
+            :title="'Owner Information'"
+            style="height: 400px;"
+          >
+            <div class="card-title">Owner Info</div> <!-- Added title -->
+            <div
+              style="display: flex; flex-direction: column; flex-wrap: wrap;">
+              <div class="info-item"><strong>Owner Name:</strong>
+                {{ deviceDetail.owner.username }}</div>
+              <div class="info-item"><strong>Email:</strong>
+                {{ deviceDetail.owner.email }}</div>
+              <div class="info-item"><strong>Mobile:</strong>
+                {{ deviceDetail.owner.mobile }}</div>
+            </div>
+          </el-card>
+        </el-col>
+      </el-row>
+
+      <template #footer>
+        <el-button @click="detailDialogVisible = false">Close</el-button>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
@@ -140,6 +233,7 @@ import {
   addDevice,
   updateDevice,
   deleteDevice,
+  getDevice, // Import the getDevice method
 } from "@/api/device";
 import { getDeviceTypes } from "@/api/deviceType";
 import { ElMessage } from "element-plus";
@@ -301,6 +395,28 @@ onMounted(() => {
   fetchDevices();
   fetchDeviceTypes(); // Also fetch device types on mounted
 });
+
+// 新增对话框变量
+const deviceDetail = ref<any>(null); // Store device details
+const detailDialogVisible = ref(false); // Control visibility of the detail dialog
+
+// 修改行点击事件处理器
+const handleRowClick = async (row: Device, event: MouseEvent) => {
+  if (event.target instanceof HTMLButtonElement) {
+    // 如果点击的是按钮，则不处理
+    return;
+  }
+  try {
+    if (!row.uuid) return;
+    const response = await getDevice(row.uuid);
+    deviceDetail.value = response.data.data;
+    console.log(deviceDetail.value);
+    detailDialogVisible.value = true;
+  } catch (error) {
+    console.error("Error fetching device details:", error);
+    ElMessage.error("Failed to fetch device details");
+  }
+};
 </script>
 
 <style scoped>
@@ -312,5 +428,18 @@ onMounted(() => {
   display: flex;
   gap: 10px;
   margin-bottom: 20px;
+}
+
+.info-item {
+  margin-right: 20px; /* Space between items */
+  margin-bottom: 10px; /* Space between lines */
+}
+
+/* New styles for card titles */
+.card-title {
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10px; /* Space below the title */
 }
 </style>

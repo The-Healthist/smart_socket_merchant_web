@@ -9,9 +9,9 @@ export const getDevices = () => {
   })
 }
 
-export const getDevice = (id: string) => {
+export const getDevice = (uuid: string) => {
    return request({
-    url: `/api/merchant/device/${id}`,
+    url: `/api/merchant/device/${uuid}`,
     method: "GET"
   })
 }
