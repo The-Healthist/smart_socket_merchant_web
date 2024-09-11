@@ -63,7 +63,7 @@
           <!-- 可放大查看 -->
           <el-image
             :src="row.pictureUrl"
-            style=" height: 100px"
+            style=" height: 80px"
             fit="contain"
             preview-src-list="[row.pictureUrl]"
           >
@@ -78,7 +78,11 @@
       <el-table-column
         prop="updatedAt"
         label="更新时间"
-      />
+      >
+        <template #default="{ row }">
+          {{ formatDate(row.updatedAt) }}
+        </template>
+      </el-table-column>
       <el-table-column
         prop="manualUrl"
         label="手册链接"
@@ -169,6 +173,9 @@
           </div>
 
         </el-form-item>
+        <el-form-item label="是否公开">
+          <el-switch v-model="currentDeviceType.isPublic" />
+        </el-form-item>
       </el-form>
 
       <!-- 对话框底部按钮 -->
@@ -196,6 +203,7 @@ import {
 import { ElMessage } from "element-plus";
 import { getUploadPolicy } from "@/api/file";
 import axios from "axios";
+import moment from "moment";
 
 // 设备类型接口定义
 interface DeviceType {
@@ -223,6 +231,7 @@ const currentDeviceType = ref<DeviceType>({
   description: "",
   manualUrl: "",
   pictureUrl: "",
+  isPublic: false,
 });
 const filters = reactive({
   name: "",
@@ -275,6 +284,7 @@ const addDeviceTypeData = () => {
     description: "",
     manualUrl: "",
     pictureUrl: "",
+    isPublic: false,
   };
   dialogTitle.value = "添加设备类型";
   dialogVisible.value = true;
@@ -410,6 +420,11 @@ const deleteDeviceTypeHandler = async (deviceType: DeviceType) => {
 onMounted(() => {
   fetchDeviceTypes();
 });
+
+// 添加一个方法来格式化日期
+const formatDate = (date: string) => {
+  return moment(date).format("YYYY/MM/DD HH:mm");
+};
 </script>
 
 <style scoped>

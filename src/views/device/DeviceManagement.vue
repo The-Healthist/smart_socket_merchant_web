@@ -57,7 +57,11 @@
       <el-table-column
         prop="createdAt"
         label="Created At"
-      />
+      >
+        <template #default="{ row }">
+          {{ formatDate(row.createdAt) }}
+        </template>
+      </el-table-column>
       <!-- 操作列 -->
       <el-table-column label="Actions">
         <template #default="{ row }">
@@ -139,6 +143,7 @@ import {
 } from "@/api/device";
 import { getDeviceTypes } from "@/api/deviceType";
 import { ElMessage } from "element-plus";
+import moment from "moment";
 
 // 设备接口定义
 interface Device {
@@ -284,6 +289,11 @@ const deleteDeviceHandler = async (device: Device) => {
     console.error("Error deleting device:", error);
     ElMessage.error("Failed to delete device");
   }
+};
+
+// 添加一个方法来格式化日期
+const formatDate = (date: string) => {
+  return moment(date).format("YYYY/MM/DD HH:mm");
 };
 
 // 组件挂载时获取设备列表和类型
