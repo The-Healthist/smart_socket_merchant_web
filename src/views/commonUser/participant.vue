@@ -73,7 +73,7 @@
         <span class="dialog-footer">
           <el-button @click="detailVisible = false">取 消</el-button>
           <el-button type="primary" @click="handleReset">重置密码</el-button>
-          <el-button type="danger" v-if="!detailData.userBlock"  @click="handleBlock(idx)">封禁</el-button>
+          <el-button type="danger" v-if="!detailData.userBlock" @click="handleBlock(idx)">封禁</el-button>
           <el-button type="primary" v-else @click="handleUnblock(idx)">解封</el-button>
         </span>
       </template>

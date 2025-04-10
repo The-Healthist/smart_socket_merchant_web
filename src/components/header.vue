@@ -1,10 +1,7 @@
 <template>
   <div class="header">
     <!-- 折叠按钮 -->
-    <div
-      class="collapse-btn"
-      @click="collapseChage"
-    >
+    <div class="collapse-btn" @click="collapseChage">
       <el-icon v-if="sidebar.collapse">
         <Expand />
       </el-icon>
@@ -16,11 +13,7 @@
     <div class="header-right">
       <div class="header-user-con">
         <!-- 用户名下拉菜单 -->
-        <el-dropdown
-          class="user-name"
-          trigger="click"
-          @command="handleCommand"
-        >
+        <el-dropdown class="user-name" trigger="click" @command="handleCommand">
           <span class="el-dropdown-link">
             {{ username }}
             <el-icon class="el-icon--right">
@@ -41,13 +34,15 @@
 import { onMounted } from "vue";
 import { useSidebarStore } from "../store/sidebar";
 import { useRouter } from "vue-router";
+import { useTagsStore } from "../store/tags";
 import imgurl from "../assets/img/img.jpg";
-import { adminProfile } from "../api";
+import { ElMessage } from "element-plus";
 
 const username: string | null = localStorage.getItem("nickname");
 const message: number = 2;
 
 const sidebar = useSidebarStore();
+const tagsStore = useTagsStore();
 // 侧边栏折叠
 const collapseChage = () => {
   sidebar.handleCollapse();
@@ -63,9 +58,18 @@ const collapseChage = () => {
 const router = useRouter();
 const handleCommand = (command: string) => {
   if (command == "loginout") {
+    // 清除所有用户相关数据
     localStorage.removeItem("token");
     localStorage.removeItem("nickname");
     localStorage.removeItem("email");
+
+    // 清除标签视图
+    tagsStore.clearTags();
+
+    // 显示退出成功消息
+    ElMessage.success("退出登录成功");
+
+    // 跳转到登录页
     router.push("/login");
   } else if (command == "user") {
     router.push("/user");
@@ -93,6 +97,7 @@ const handleCommand = (command: string) => {
   font-size: 22px;
   color: #fff;
 }
+
 .collapse-btn {
   display: flex;
   justify-content: center;
@@ -102,25 +107,30 @@ const handleCommand = (command: string) => {
   padding: 0 21px;
   cursor: pointer;
 }
+
 .header .logo {
   float: left;
   width: 250px;
   line-height: 70px;
 }
+
 .header-right {
   float: right;
   padding-right: 50px;
 }
+
 .header-user-con {
   display: flex;
   height: 70px;
   align-items: center;
 }
+
 .btn-fullscreen {
   transform: rotate(45deg);
   margin-right: 5px;
   font-size: 24px;
 }
+
 .btn-bell,
 .btn-fullscreen {
   position: relative;
@@ -132,6 +142,7 @@ const handleCommand = (command: string) => {
   display: flex;
   align-items: center;
 }
+
 .btn-bell-badge {
   position: absolute;
   right: 4px;
@@ -142,21 +153,26 @@ const handleCommand = (command: string) => {
   background: #f56c6c;
   color: #fff;
 }
+
 .btn-bell .el-icon-lx-notice {
   color: #fff;
 }
+
 .user-name {
   margin-left: 10px;
 }
+
 .user-avator {
   margin-left: 20px;
 }
+
 .el-dropdown-link {
   color: #fff;
   cursor: pointer;
   display: flex;
   align-items: center;
 }
+
 .el-dropdown-menu__item {
   text-align: center;
 }

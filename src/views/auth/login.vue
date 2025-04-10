@@ -2,40 +2,23 @@
   <div class="login-wrap">
     <div class="ms-login">
       <div class="ms-title">SmartSocket Merchant商城</div>
-      <el-form
-        :model="formData"
-        :rules="rules"
-        ref="login"
-        label-width="0px"
-        class="ms-content"
-      >
+      <el-form :model="formData" :rules="rules" ref="login" label-width="0px" class="ms-content">
         <el-form-item prop="mobile">
-          <el-input
-            v-model="formData.mobile"
-            placeholder="mobile"
-          >
+          <el-input v-model="formData.mobile" placeholder="mobile">
             <template #prepend>
               <el-button :icon="User"></el-button>
             </template>
           </el-input>
         </el-form-item>
         <el-form-item prop="password">
-          <el-input
-            type="password"
-            placeholder="password"
-            v-model="formData.password"
-            @keyup.enter="submitForm(login)"
-          >
+          <el-input type="password" placeholder="password" v-model="formData.password" @keyup.enter="submitForm(login)">
             <template #prepend>
               <el-button :icon="Lock"></el-button>
             </template>
           </el-input>
         </el-form-item>
         <div class="login-btn">
-          <el-button
-            type="primary"
-            @click="submitForm(login)"
-          >登录</el-button>
+          <el-button type="primary" @click="submitForm(login)">登录</el-button>
         </div>
       </el-form>
     </div>
@@ -81,6 +64,9 @@ const submitForm = (formEl: FormInstance | undefined | any) => {
         .then((res) => {
           ElMessage.success("登录成功");
           localStorage.setItem("token", "Bearer " + res.data.token);
+          // 存储用户信息，用于显示在界面上
+          localStorage.setItem("nickname", res.data.username || "管理员");
+          localStorage.setItem("email", res.data.email || formData.mobile);
           router.push("/dashboard");
         })
         .catch((err) => {

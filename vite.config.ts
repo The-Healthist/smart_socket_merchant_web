@@ -13,10 +13,10 @@ export default defineConfig({
 		VueSetupExtend(),
 		AutoImport({
 			resolvers: [ElementPlusResolver()]
-			}),
+		}),
 		Components({
 			resolvers: [ElementPlusResolver()]
-			})
+		})
 	],
 	resolve: {
 		alias: {
@@ -27,13 +27,13 @@ export default defineConfig({
 		include: ['schart.js']
 	},
 	server: {
-		host: "0.0.0.0",
+		host: true,
 		proxy: {
 			"/api": {
-				target: "https://sockettest.skylinedances.com",
+				target: "http://test-a.isocket.skylinedances.com",
 				changeOrigin: true,
-				rewrite: (path) => path.replace(/^\/api/, ""),
-			},
+				rewrite: path => path.replace(/^\/api/, "")
+			}
 		},
 	},
 });
